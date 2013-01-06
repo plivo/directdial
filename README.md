@@ -1,4 +1,6 @@
 directdial
 ==========
 
-Direct Dial application
+Direct Dial application.
+
+Ready to be used with Heroku.
