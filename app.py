@@ -20,7 +20,6 @@ def sip_route():
             hangup = request.args.get('HangupCause', None)
             dial_music = request.args.get('DialMusic', "")
             disable_call = request.args.get('DisableCall', "")
-            force_webrtc = request.args.get('WebRTC', "false") == "true"
         else:
             to = request.form.get('ForwardTo', None)
             if not to:
@@ -32,7 +31,6 @@ def sip_route():
             hangup = request.form.get('HangupCause', None)
             dial_music = request.form.get('DialMusic', "")
             disable_call = request.form.get('DisableCall', "")
-            force_webrtc = request.form.get('WebRTC', "false") == "true"
 
         if hangup:
             return "SIP Route hangup callback"
@@ -59,9 +57,7 @@ def sip_route():
                     d = r.addDial(callerId=_from, callerName=cname)
                 else:
                     d = r.addDial(callerId=_from, callerName=cname, dialMusic=dial_music)
-                if is_web_user is True or force_webrtc is True:
-                    d.addUser(to, webrtc=True)
-                elif is_sip_user:
+                if is_sip_user:
                     d.addUser(to)
                 else:
                     d.addNumber(to)
