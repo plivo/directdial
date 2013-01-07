@@ -1,7 +1,6 @@
-import traceback
 import os
 import os.path
-from flask import Flask, render_template, request, Response, make_response
+from flask import Flask, request, make_response
 import plivo
 app = Flask(__name__)
 
@@ -33,7 +32,8 @@ def sip_route():
             disable_call = request.form.get('DisableCall', "")
 
         if hangup:
-            return "SIP Route hangup callback"
+            r = make_response("SIP Route hangup callback")
+            return 
 
         r = plivo.Response()
 
@@ -72,8 +72,5 @@ def sip_route():
 
 
 if __name__ == '__main__':
-   if not os.path.isfile("templates/response_template.xml"):
-       print "Error : Can't find the XML template : templates/response_template.xml"
-   else:
-       port = int(os.environ['PORT'])
-       app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
