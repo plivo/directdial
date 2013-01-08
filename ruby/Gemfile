@@ -1,0 +1,5 @@
+source :rubygems 
+gem 'sinatra', '1.3.3'
+gem 'sinatra-contrib'
+#gem 'sinatra-routes', '0.1.1'
+gem 'plivo'
