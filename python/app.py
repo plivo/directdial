@@ -8,32 +8,29 @@ app = Flask(__name__)
 def sip_route():
     try:
         print "SIP Route %s" % request.values.items()
+        to = request.args.get('ForwardTo', None)
+        _from = request.args.get('CLID', None)
+        dial_music = request.args.get('DialMusic', "")
+        disable_call = request.args.get('DisableCall', "")
         if request.method == "GET":
-            to = request.args.get('ForwardTo', None)
             if not to:
                 to = request.args.get('To', None)
-            _from = request.args.get('CLID', None)
-            if _from is None:
+            if not _from:
                 _from = request.args.get('From', '')
             cname = request.args.get('CallerName', '')
             hangup = request.args.get('HangupCause', None)
-            dial_music = request.args.get('DialMusic', "")
-            disable_call = request.args.get('DisableCall', "")
         else:
-            to = request.form.get('ForwardTo', None)
             if not to:
                 to = request.form.get('To', None)
-            _from = request.form.get('CLID', None)
-            if _from is None:
+            if not _from:
                 _from = request.form.get('From', '')
             cname = request.form.get('CallerName', '')
             hangup = request.form.get('HangupCause', None)
-            dial_music = request.form.get('DialMusic', "")
-            disable_call = request.form.get('DisableCall', "")
 
         if hangup:
-            r = make_response("SIP Route hangup callback")
-            return 
+            response = make_response("SIP Route hangup callback", 400)
+            response.headers['Content-Type'] = 'text/plain'
+            return response
 
         r = plivo.Response()
 
