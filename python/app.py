@@ -28,9 +28,7 @@ def sip_route():
             hangup = request.form.get('HangupCause', None)
 
         if hangup:
-            response = make_response("SIP Route hangup callback", 400)
-            response.headers['Content-Type'] = 'text/plain'
-            return response
+            return "SIP Route hangup callback"
 
         r = plivo.Response()
 
