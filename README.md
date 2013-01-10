@@ -3,9 +3,23 @@ directdial
 
 Direct Dial application.
 
-Ready to be used with Heroku.
+Apps ready to be used with Heroku: python, ruby
+
+## Requirement
+* To be able to make outbound calls from a Plivo SIP endpoint.
+* To be able to set up call forwarding.
+
+## Usage 
+###SIP endpoint
+* [Create a SIP endpoint](https://plivo.com/endpoint/create/) from the [web dashboard](https://plivo.com/dashboard/) and link it to a Plivo application.
+* Set this web app url as the "Answer Url" of the Plivo application to which the SIP endpoint is linked.
+
+###Call Forwarding
+* [Rent a number](https://plivo.com/number/search/) from the [web dashboard](https://plivo.com/dashboard/) and link it to a Plivo application.
+* Set this web app url as the "Answer Url" of the Plivo application to which the number is linked.
 
 ## Usage Examples
+###Default usage => bridge call to the 'To' parameter
 * ####Set call forwarding <br/>
   http://plivodirectdial.herokuapp.com/response/sip/route/?ForwardTo=15555559999<br/>
 
