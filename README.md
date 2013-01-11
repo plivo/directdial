@@ -5,7 +5,7 @@ Direct Dial application.
 
 Apps ready to be used with Heroku: python, ruby
 
-## Requirement
+## Use case
 * To be able to make outbound calls from a Plivo SIP endpoint.
 * To be able to set up call forwarding.
 
