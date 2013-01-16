@@ -15,20 +15,21 @@ def sip_route():
         if request.method == "GET":
             if not to:
                 to = request.args.get('To', None)
-            if not _from:
+            if _from is None:
                 _from = request.args.get('From', '')
             cname = request.args.get('CallerName', '')
             hangup = request.args.get('HangupCause', None)
         else:
             if not to:
                 to = request.form.get('To', None)
-            if not _from:
+            if _from is None:
                 _from = request.form.get('From', '')
             cname = request.form.get('CallerName', '')
             hangup = request.form.get('HangupCause', None)
-
+        
         if hangup:
-            return "SIP Route hangup callback"
+            response = make_response("SIP Route hangup callback")
+            return response
 
         r = plivo.Response()
 
