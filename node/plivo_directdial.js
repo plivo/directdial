@@ -4,7 +4,7 @@ var express = require('express');
 var app = express();
 app.use(express.bodyParser()); // Required for parsing POST
 
-app.all('/', function (req, res) {
+app.all('/response/sip/route/', function (req, res) {
     var dst = req.param('ForwardTo');
     var src = req.param('CLID');
     var cname = req.param('CallerName') || "";
@@ -12,6 +12,11 @@ app.all('/', function (req, res) {
     var dial_music = req.param('DialMusic');
     var disable_call = req.param('DisableCall');
     var r = plivo.Response();
+
+    if (hangup) {
+        res.end("SIP Route hangup callback");
+        return;
+    }
     if (!dst) {
         dst = req.param('To');
     }
