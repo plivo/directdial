@@ -1,5 +1,4 @@
 var plivo = require('plivo');
-var request = require('request');
 var express = require('express');
 var app = express();
 app.use(express.bodyParser()); // Required for parsing POST
