@@ -34,3 +34,6 @@ nosetests.xml
 .project
 .pydevproject
 .ropeproject
+
+# dependency modules
+node_modules
