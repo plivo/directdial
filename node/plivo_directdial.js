@@ -40,7 +40,7 @@ app.all('/response/sip/route/', function (req, res) {
             all: 1,
             sip: 1
         }) {
-            console.log("SIP Route calling: Calls to sip user is disabled");
+            console.log("SIP Route calling sip user is disabled: " + disable_call);
             r.addHangup({
                 reason: 'busy'
             });
@@ -48,7 +48,7 @@ app.all('/response/sip/route/', function (req, res) {
             all: 1,
             number: 1
         }) {
-            console.log("SIP Route calling: Calls to sip user is disabled");
+            console.log("SIP Route calling number is disabled: " + disable_call);
             r.addHangup({
                 reason: 'busy'
             });
@@ -66,7 +66,10 @@ app.all('/response/sip/route/', function (req, res) {
             }
         }
     } else {
-        r.addHangup();
+		console.log("SIP Route cannot identify destination number")
+        r.addHangup({
+                reason: 'busy'
+            });
     }
 
     console.log(r.toXML());
