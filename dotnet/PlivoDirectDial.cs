@@ -15,15 +15,15 @@ namespace GoPlivo
         {
             Get["/response/sip/route/"] = _ => {
                 string dst = Request.Query["ForwardTo"];
-                if ( String.IsNullOrEmpty(dst) )
-                    dst = Request.Query["To"];
                 string src = Request.Query["CLID"];
-                if ( String.IsNullOrEmpty(src) )
-                    src = Request.Query["From"];
                 string cname = Request.Query["CallerName"];
                 string hangup = Request.Query["HangupCause"];
                 string dialMusic = Request.Query["DialMusic"];
                 string disableCall = Request.Query["DisableCall"];
+                if ( String.IsNullOrEmpty(dst) )
+                    dst = Request.Query["To"];
+                if ( String.IsNullOrEmpty(src) )
+                    src = Request.Query["From"];
 
                 if (String.IsNullOrEmpty(cname))
                     cname = "";
@@ -37,50 +37,40 @@ namespace GoPlivo
                     response.AddHangup(new dict {
                         {"reason", "busy"},
                     });
-                    return response.ToString();
                 } else {
                     bool isSipUser = false;
 
                     if (dst.Length > 4 && dst.Substring(0, 4) == "sip:")
-                    {
                         isSipUser = true;
-                    }
 
                     if (isSipUser && disableCall == "all" || disableCall == "sip") {
                         Console.WriteLine(String.Format("SIP Route calling sip user is disabled : %s", disableCall));
                         response.AddHangup(new dict {
                             { "reason", "busy" },
                         });
-                        return response.ToString();
                     } else if (!isSipUser && disableCall == "all" || disableCall == "number") {
                         response.AddHangup(new dict {
                             { "reason", "busy" },
                         });
-                        return response.ToString();
                     } else {
                         Console.WriteLine(String.Format("SIP Route dialing %s", dst));
                         
-                        if (!String.IsNullOrEmpty(dialMusic) && isSipUser)
-                        {
+                        if (!String.IsNullOrEmpty(dialMusic) && isSipUser) {
                             var dial = response.AddDial(new dict {
                                 {"callerId", src},
                                 {"callerName", cname},
-                                {"dialMusic", String.Format("%s",dialMusic)},
+                                {"dialMusic", dialMusic)},
                             }); 
                             dial.AddUser(dst, new dict { });
                             response.Add(dial);
-                        }
-                        else if (String.IsNullOrEmpty(dialMusic) && isSipUser)
-                        {
+                        } else if (String.IsNullOrEmpty(dialMusic) && isSipUser) {
                             var dial = new Plivo.XML.Dial(new dict {
                                 {"callerId", src},
                                 {"callerName", cname},
                             });
                             dial.AddUser(dst, new dict { });
                             response.Add(dial);
-                        }
-                        else if (!String.IsNullOrEmpty(dialMusic) && !isSipUser)
-                        {
+                        } else if (!String.IsNullOrEmpty(dialMusic) && !isSipUser) {
                             var dial = new Plivo.XML.Dial(new dict {
                                 {"callerId", src},
                                 {"callerName", cname},
@@ -88,9 +78,7 @@ namespace GoPlivo
                             });
                             dial.AddNumber(dst, new dict { });
                             response.Add(dial);
-                        }
-                        else if (String.IsNullOrEmpty(dialMusic) && !isSipUser)
-                        {
+                        } else if (String.IsNullOrEmpty(dialMusic) && !isSipUser) {
                             var dial = new Plivo.XML.Dial(new dict {
                                 {"callerId", src},
                                 {"callerName", cname},
