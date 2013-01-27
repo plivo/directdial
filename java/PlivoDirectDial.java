@@ -65,27 +65,24 @@ public class PlivoDirectDial {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
                               dial.setDialMusic(dialMusic);
-                              dial.setNumber(toNumber);
-                              plivoResponse.setDial(dial);
+                              dial.addNumber(toNumber);
                           } else if ( dialMusic.isEmpty() && !isSipUser ) {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
-                              dial.setNumber(toNumber);
-                              plivoResponse.setDial(dial);
-                          } // else if ( !dialMusic.isEmpty() && isSipUser ) {
-                          //     dial.setCallerName(callerName);
-                          //     dial.setCallerId(fromNumber);
-                          //     dial.setDialMusic(dialMusic);
-                          //     dial.setUser(toNumber);
-                          //     plivoResponse.setDial(dial);
-                          // } else if ( dialMusic.isEmpty() && isSipUser ) {
-                          //     dial.setCallerName(callerName);
-                          //     dial.setCallerId(fromNumber);
-                          //     dial.setUser(toNumber);
-                          //     plivoResponse.setDial(dial);
-                          // }
+                              dial.addNumber(toNumber);
+                          } else if ( !dialMusic.isEmpty() && isSipUser ) {
+                              dial.setCallerName(callerName);
+                              dial.setCallerId(fromNumber);
+                              dial.setDialMusic(dialMusic);
+                              dial.addUser(toNumber);
+                          } else if ( dialMusic.isEmpty() && isSipUser ) {
+                              dial.setCallerName(callerName);
+                              dial.setCallerId(fromNumber);
+                              dial.addUser(toNumber);
+                          }
                       }
                   }
+				  plivoResponse.addDial(dial);
                   response.type("text/xml");
                   response.body(plivoResponse.serializeToXML());
               }
