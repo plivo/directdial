@@ -3,7 +3,7 @@ PHP
 
 Direct Dial application.
 
-The file plivo_directdial.php needs to be hosted on a server.
+The file plivo_directdial.php needs to be hosted on a [server](http://www.appfog.com/).
 
 ## Usage Examples
 ###Default usage => bridge call to the 'To' parameter
