@@ -1,8 +1,14 @@
-import com.plivo.sdk.xml.elements.*;
+package com.plivo.directdial;
+
+import com.plivo.sdk.xml.elements.Dial;
+import com.plivo.sdk.xml.elements.User;
+import com.plivo.sdk.xml.elements.Number;
+import com.plivo.sdk.xml.elements.Hangup;
+
 import static spark.Spark.*;
 import spark.*;
 
-public class PlivoDirectDial {
+public class App {
    public static void main(String[] args) {
       get(new Route("/response/sip/route/") {
               @Override
@@ -16,7 +22,7 @@ public class PlivoDirectDial {
                   String dialMusic   = request.queryParams("DialMusic");
 
                   // flags
-                  bool isSipUser = false;
+                  boolean isSipUser = false;
 
                   // if 'ForwardTo' is not set specifically use 'To'.
                   // caveat: if 'ForwardTo' is not set when app is linked 
@@ -38,7 +44,8 @@ public class PlivoDirectDial {
                   hangup.setReason("busy");
 
                   Dial dial = new Dial();
-                      
+                  Number number = new Number();
+                  User sipUser = new User();
                   // if invoked as a hangup_url send a text response
                   if ( !hangupCause.isEmpty() ) {
                       return "SIP Route hangup callback";
@@ -47,44 +54,49 @@ public class PlivoDirectDial {
                   // if no destination nunber is available, hang up.
                   if ( !toNumber.isEmpty() ) {
                       System.out.println("SIP Route cannot identify destination number");
-                      plivoResponse.setHangup(hangup);
+                      plivoResponse.addHangup(hangup);
                   } else {
-                      if ( toNumber.length > 4 && toNumber.substring(4) == "sip:" ) {
+                      if ( toNumber.length() > 4 && toNumber.substring(4) == "sip:" ) {
                           isSipUser = true;
                       }
                       // check for outbound call disable status - all, sip or number
                       if ( isSipUser && disableCall == "all" || disableCall == "sip" ) {
-                          System.out.println("SIP Route calling sip user is disabled : %s", disableCall);
-                          plivoResponse.setHangup(hangup);
+                          System.out.printf("SIP Route calling sip user is disabled : %s", disableCall);
+                          plivoResponse.addHangup(hangup);
                       } else if ( !isSipUser && disableCall == "all" || disableCall == "number" ) {
-                          System.out.println("SIP Route calling number is disabled : %s", disableCall);
-                          plivoResponse.setHangup(hangup);
+                          System.out.printf("SIP Route calling number is disabled : %s", disableCall);
+                          plivoResponse.addHangup(hangup);
                       } else {
-                          System.out.println("SIP Route dialing %s", dst);
+                          System.out.printf("SIP Route dialing %s", toNumber);
                           if ( !dialMusic.isEmpty() && !isSipUser ) {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
                               dial.setDialMusic(dialMusic);
-                              dial.addNumber(toNumber);
+                              number.setNumber(toNumber);
+                              dial.addNumber(number);
                           } else if ( dialMusic.isEmpty() && !isSipUser ) {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
-                              dial.addNumber(toNumber);
+                              number.setNumber(toNumber);
+                              dial.addNumber(number);
                           } else if ( !dialMusic.isEmpty() && isSipUser ) {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
                               dial.setDialMusic(dialMusic);
-                              dial.addUser(toNumber);
+                              sipUser.setUser(toNumber);
+                              dial.addUser(sipUser);
                           } else if ( dialMusic.isEmpty() && isSipUser ) {
                               dial.setCallerName(callerName);
                               dial.setCallerId(fromNumber);
-                              dial.addUser(toNumber);
+                              sipUser.setUser(toNumber);
+                              dial.addUser(sipUser);
                           }
                       }
                   }
                   plivoResponse.addDial(dial);
                   response.type("text/xml");
                   response.body(plivoResponse.serializeToXML());
+                  return response;
               }
           });
    }
