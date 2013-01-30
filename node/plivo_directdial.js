@@ -4,6 +4,7 @@ var app = express();
 app.use(express.bodyParser()); // Required for parsing POST
 
 app.all('/response/sip/route/', function (req, res) {
+	console.log(req.query);
     var dst = req.param('ForwardTo');
     var src = req.param('CLID');
     var cname = req.param('CallerName') || "";
@@ -72,7 +73,6 @@ app.all('/response/sip/route/', function (req, res) {
             });
     }
 
-    console.log(r.toXML());
     res.set({
         'Content-Type': 'text/xml'
     });
