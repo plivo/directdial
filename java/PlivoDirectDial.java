@@ -4,6 +4,7 @@ import com.plivo.sdk.xml.elements.Dial;
 import com.plivo.sdk.xml.elements.User;
 import com.plivo.sdk.xml.elements.Number;
 import com.plivo.sdk.xml.elements.Hangup;
+import com.plivo.sdk.xml.elements.PlivoResponse;
 
 import static spark.Spark.*;
 import spark.*;
@@ -37,8 +38,7 @@ public class App {
                   }
                   
                   // Plivo XML elements
-                  com.plivo.sdk.xml.elements.Response plivoResponse 
-                      = new com.plivo.sdk.xml.elements.Response();
+                  PlivoResponse plivoResponse = new PlivoResponse();
 
                   Hangup hangup = new Hangup();
                   hangup.setReason("busy");
