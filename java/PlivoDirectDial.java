@@ -1,10 +1,10 @@
 package com.plivo.directdial;
 
-import com.plivo.sdk.xml.elements.Dial;
-import com.plivo.sdk.xml.elements.User;
-import com.plivo.sdk.xml.elements.Number;
-import com.plivo.sdk.xml.elements.Hangup;
-import com.plivo.sdk.xml.elements.PlivoResponse;
+import com.plivo.helper.xml.elements.Dial;
+import com.plivo.helper.xml.elements.User;
+import com.plivo.helper.xml.elements.Number;
+import com.plivo.helper.xml.elements.Hangup;
+import com.plivo.helper.xml.elements.PlivoResponse;
 
 import static spark.Spark.*;
 import spark.*;
