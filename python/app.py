@@ -1,7 +1,7 @@
 import os
 import os.path
 from flask import Flask, request, make_response
-import plivo
+import plivoxml
 app = Flask(__name__)
 
 @app.route('/response/sip/route/', methods=['GET', 'POST'])
@@ -26,12 +26,12 @@ def sip_route():
                 _from = request.form.get('From', '')
             cname = request.form.get('CallerName', '')
             hangup = request.form.get('HangupCause', None)
-        
+
         if hangup:
             response = make_response("SIP Route hangup callback")
             return response
 
-        r = plivo.Response()
+        r = plivoxml.Response()
 
         if not to:
             print "SIP Route cannot identify destination number"
