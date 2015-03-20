@@ -1,10 +1,10 @@
 import os
 import os.path
 from flask import Flask, request, make_response
-import plivo
+import plivoxml
 app = Flask(__name__)
 
-@app.route('/response/sip/route/', methods=['GET', 'POST'])
+@app.route('/direct-dial/', methods=['GET', 'POST'])
 def sip_route():
     try:
         print "SIP Route %s" % request.values.items()
@@ -31,7 +31,7 @@ def sip_route():
             response = make_response("SIP Route hangup callback")
             return response
 
-        r = plivo.Response()
+        r = plivoxml.Response()
 
         if not to:
             print "SIP Route cannot identify destination number"
@@ -43,10 +43,10 @@ def sip_route():
                 is_sip_user = False
             if is_sip_user and disable_call in ('all', 'sip'):
                 print "SIP Route calling sip user is disabled : %s" % str(disable_call)
-                r.addHangup(reason="rejected")
+                r.addHangup(reason="busy")
             elif not is_sip_user and disable_call in ('all', 'number'):
                 print "SIP Route calling number is disabled : %s" % str(disable_call)
-                r.addHangup(reason="rejected")
+                r.addHangup(reason="busy")
             else:
                 print "SIP Route dialing %s" % str(to)
                 if not dial_music:
